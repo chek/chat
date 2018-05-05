@@ -29,7 +29,8 @@ defmodule Chat.Registry do
     ## Server Callbacks
   
     def init(:ok) do
-      {:ok, %{}}
+        IO.puts 'Chat.Registry init'
+        {:ok, %{}}
     end
   
     def handle_call({:lookup, name}, _from, names) do

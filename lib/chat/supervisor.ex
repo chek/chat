@@ -6,10 +6,11 @@ defmodule Chat.Supervisor do
     end
   
     def init(:ok) do
-      children = [
-        {Chat.Registry, name: Chat.Registry}
-      ]      
-  
-      Supervisor.init(children, strategy: :one_for_one)
+        IO.puts 'Chat.Supervisor init'
+        children = [
+            {Chat.Registry, name: Chat.Registry}
+        ]      
+
+        Supervisor.init(children, strategy: :one_for_one)
     end
 end
