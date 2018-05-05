@@ -1,4 +1,9 @@
 defmodule Chat do
+  use Application
+
+  def start(_type, _args) do
+    Chat.Supervisor.start_link(name: Chat.Supervisor)
+  end  
   @moduledoc """
   Documentation for Chat.
   """
