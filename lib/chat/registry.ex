@@ -15,6 +15,15 @@ defmodule Chat.Registry do
   
     Returns `{:ok, pid}` if the bucket exists, `:error` otherwise.
     """
+    def users(server) do
+      GenServer.call(server, {:users})
+    end
+  
+    @doc """
+    Looks up the bucket pid for `name` stored in `server`.
+  
+    Returns `{:ok, pid}` if the bucket exists, `:error` otherwise.
+    """
     def lookup(server, name) do
       GenServer.call(server, {:lookup, name})
     end
@@ -29,20 +38,31 @@ defmodule Chat.Registry do
     ## Server Callbacks
   
     def init(:ok) do
-        IO.puts 'Chat.Registry init'
         {:ok, %{}}
     end
   
+    def handle_call({:users}, _from, names) do
+        map = %{}
+        for  {uuid, user}  <-  names  do
+            loc = Chat.User.get(user, "location")
+            Map.put(map, uuid, loc)
+            #map[uuid] = loc
+            IO.puts uuid
+            IO.inspect loc
+        end        
+        {:reply, map, names}
+    end
+  
     def handle_call({:lookup, name}, _from, names) do
-      {:reply, Map.fetch(names, name), names}
+        {:reply, Map.fetch(names, name), names}
     end
   
     def handle_cast({:create, name}, names) do
-      if Map.has_key?(names, name) do
-        {:noreply, names}
-      else
-        {:ok, user} = Chat.User.start_link([])
-        {:noreply, Map.put(names, name, user)}
-      end
+        if Map.has_key?(names, name) do
+            {:noreply, names}
+        else
+            {:ok, user} = Chat.User.start_link([])
+            {:noreply, Map.put(names, name, user)}
+        end
     end
 end

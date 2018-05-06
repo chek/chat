@@ -5,7 +5,6 @@ defmodule Chat.User do
     Starts a new user.
     """
     def start_link(_opts) do
-        IO.puts 'Chat.User start_link'
         Agent.start_link(fn -> %{} end)
     end
   
